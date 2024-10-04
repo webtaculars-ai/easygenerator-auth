@@ -29,7 +29,7 @@ const SignInPage = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Button text="Sign In" />
+      <Button text="Sign In" disabled={!email || !password} />
     </FormLayout>
   );
 };

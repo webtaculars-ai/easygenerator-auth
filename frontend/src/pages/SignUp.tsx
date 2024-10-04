@@ -44,7 +44,7 @@ const SignUpPage = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Button text="Sign Up" />
+      <Button text="Sign Up" disabled={!email || !name || !password} />
     </FormLayout>
   );
 };
