@@ -8,6 +8,7 @@ const SignInPage = () => {
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
+    // TODO: Send data to the backend
     navigate("/application");
   };
 

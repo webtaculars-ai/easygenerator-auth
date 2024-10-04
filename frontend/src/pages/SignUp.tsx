@@ -7,8 +7,18 @@ const SignUpPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSignUp = () => {
-    // TODO: API Call for signup
+  const handleSignUp = (e: React.FormEvent) => {
+    e.preventDefault();
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      alert(
+        "Password must have at least 8 characters, 1 letter, 1 number, and 1 special character"
+      );
+      return;
+    }
+    // TODO: Send data to the backend
+    navigate("/application");
   };
 
   return (
