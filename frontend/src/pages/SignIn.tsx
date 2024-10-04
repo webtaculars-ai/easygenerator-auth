@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Input from "../components/Input";
+import Button from "../components/Button";
+import FormLayout from "../components/FormLayout";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
@@ -8,38 +11,26 @@ const SignInPage = () => {
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Send data to the backend
+    // Handle backend authentication
     navigate("/application");
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form onSubmit={handleSignIn} className="bg-white p-6 rounded shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Sign In</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
-          required
-        />
-        <button
-          type="submit"
-          className="w-full p-2 bg-blue-500 text-white rounded"
-        >
-          Sign In
-        </button>
-      </form>
-    </div>
+    <FormLayout title="Sign In" onSubmit={handleSignIn}>
+      <Input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button text="Sign In" />
+    </FormLayout>
   );
 };
 
