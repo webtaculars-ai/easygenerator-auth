@@ -2,6 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 
+export type UserDocument = User & Document;
+
 enum UserRole {
   USER = 'user',
   ADMIN = 'admin',
@@ -25,25 +27,19 @@ export class User extends Document {
 
   @Prop({ default: false })
   isEmailVerified: boolean;
+
+  async comparePassword(candidatePassword: string): Promise<boolean> {
+    return bcrypt.compare(candidatePassword, this.password);
+  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.pre('save', async function (next): Promise<void> {
-  const user = this as User;
+  const user = this as UserDocument;
   if (!user.isModified('password')) {
     return next();
   }
   user.password = await bcrypt.hash(user.password, 10);
   next();
 });
-
-UserSchema.methods.comparePassword = async function (
-  candidatePassword: string,
-): Promise<boolean> {
-  try {
-    return await bcrypt.compare(candidatePassword, this.password);
-  } catch (error) {
-    return false;
-  }
-};
