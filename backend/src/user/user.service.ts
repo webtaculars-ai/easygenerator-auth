@@ -12,11 +12,11 @@ export class UserService {
     return user.save();
   }
 
-  async signIn(email: string, password: string): Promise<boolean> {
+  async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.userModel.findOne({ email });
-    if (!user) {
-      return false;
+    if (user && (await user.comparePassword(password))) {
+      return user;
     }
-    return user.comparePassword(password);
+    return null;
   }
 }
