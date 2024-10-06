@@ -11,7 +11,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
   app.enableCors({
-    origin: 'http://localhost:3001',
+    origin: process.env.BASE_URL || 'http://localhost:3001',
     credentials: true,
   });
 
