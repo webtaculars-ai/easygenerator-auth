@@ -51,8 +51,12 @@ export class UserController {
       res.cookie('jwt', jwt.accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
         maxAge: 3600000,
+        sameSite: 'none',
+        domain:
+          process.env.NODE_ENV === 'production'
+            ? process.env.BASE_DOMAIN
+            : undefined,
       });
 
       return res.status(HttpStatus.OK).send({

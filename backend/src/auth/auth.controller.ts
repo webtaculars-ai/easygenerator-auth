@@ -40,8 +40,12 @@ export class AuthController {
     res.cookie('jwt', jwt.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
       maxAge: 3600000, // 1 hour
+      sameSite: 'none',
+      domain:
+        process.env.NODE_ENV === 'production'
+          ? process.env.BASE_DOMAIN
+          : undefined,
     });
 
     return res.status(HttpStatus.OK).send({ message: 'Sign in successful' });
@@ -56,8 +60,12 @@ export class AuthController {
     res.cookie('jwt', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 0, // Expire immediately
+      sameSite: 'none',
+      maxAge: 0,
+      domain:
+        process.env.NODE_ENV === 'production'
+          ? process.env.BASE_DOMAIN
+          : undefined,
     });
 
     this.logger.log('Logged out successfully');
