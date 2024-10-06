@@ -1,14 +1,30 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Res } from '@nestjs/common';
 import { UserService } from './user.service';
+import { AuthService } from '../auth/auth.service';
 import { SignUpDto } from './dto/signup.dto';
+import { Response } from 'express';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post('signup')
-  async signUp(@Body() signUpDto: SignUpDto) {
+  async signUp(@Body() signUpDto: SignUpDto, @Res() res: Response) {
     const { email, name, password } = signUpDto;
-    return this.userService.signUp(email, name, password);
+    const user = await this.userService.signUp(email, name, password);
+
+    const jwt = await this.authService.login(user);
+
+    res.cookie('jwt', jwt.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 3600000,
+    });
+
+    return res.send({ message: 'User registered and logged in successfully' });
   }
 }
