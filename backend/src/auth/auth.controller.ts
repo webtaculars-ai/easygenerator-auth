@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignInDto } from '../user/dto/signin.dto';
@@ -27,6 +27,21 @@ export class AuthController {
       maxAge: 3600000, // 1 hour
     });
 
-    return res.send({ message: 'Sign in successful' });
+    return res.status(HttpStatus.OK).send({ message: 'Sign in successful' });
+  }
+
+  @Post('logout')
+  async logout(@Res() res: Response) {
+    // Clear the JWT cookie by setting it to an empty string and setting maxAge to 0
+    res.cookie('jwt', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 0, // Expire immediately
+    });
+
+    return res
+      .status(HttpStatus.OK)
+      .json({ message: 'Logged out successfully' });
   }
 }

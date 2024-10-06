@@ -33,7 +33,7 @@ export class UserController {
         maxAge: 3600000,
       });
 
-      return res.send({
+      return res.status(HttpStatus.OK).send({
         message: 'User registered and logged in successfully',
       });
     } catch (error) {

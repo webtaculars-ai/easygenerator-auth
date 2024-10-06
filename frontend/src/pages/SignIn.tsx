@@ -20,7 +20,7 @@ const SignInPage = () => {
         password,
       });
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         navigate("/application");
       }
     } catch (error: any) {
