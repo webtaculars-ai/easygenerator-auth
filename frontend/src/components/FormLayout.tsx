@@ -7,7 +7,10 @@ interface FormLayoutProps {
 const FormLayout = ({ children, title, onSubmit }: FormLayoutProps) => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form onSubmit={onSubmit} className="bg-white p-6 rounded shadow-md">
+      <form
+        onSubmit={onSubmit}
+        className="bg-white p-6 rounded shadow-md w-1/3"
+      >
         <h2 className="text-2xl font-bold mb-4">{title}</h2>
         {children}
       </form>

@@ -81,14 +81,14 @@ const SignUpPage = () => {
         onChange={handlePasswordChange}
       />
       <p
-        className={`text-sm ${
+        className={`text-sm mb-2 ${
           passwordTouched && passwordError ? "text-red-500" : "text-gray-500"
         }`}
       >
         {passwordError}
       </p>
 
-      {signUpError && <p className="text-red-500">{signUpError}</p>}
+      {signUpError && <p className="text-red-500 mb-2">{signUpError}</p>}
 
       <Button text="Sign Up" disabled={!email || !name || !isPasswordValid} />
       <p className="mt-4">

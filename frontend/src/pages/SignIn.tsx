@@ -46,7 +46,7 @@ const SignInPage = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      {signInError && <p className="text-red-500">{signInError}</p>}
+      {signInError && <p className="text-red-500 mb-2">{signInError}</p>}
       <Button text="Sign In" disabled={!email || !password} />
 
       <p className="mt-4">
