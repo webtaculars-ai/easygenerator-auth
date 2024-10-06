@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -91,6 +91,12 @@ const SignUpPage = () => {
       {signUpError && <p className="text-red-500">{signUpError}</p>}
 
       <Button text="Sign Up" disabled={!email || !name || !isPasswordValid} />
+      <p className="mt-4">
+        Already have an account?{" "}
+        <Link to="/signin" className="text-blue-500 underline">
+          Sign In
+        </Link>
+      </p>
     </FormLayout>
   );
 };
