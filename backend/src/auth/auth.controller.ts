@@ -6,17 +6,22 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignInDto } from '../user/dto/signin.dto';
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
   constructor(private readonly authService: AuthService) {}
 
   @Post('signin')
+  @ApiOperation({ summary: 'User login' })
+  @ApiResponse({ status: 200, description: 'Login successful' })
+  @ApiResponse({ status: 401, description: 'Invalid credentials' })
   async signIn(@Body() signInDto: SignInDto, @Res() res: Response) {
     this.logger.log(`Sign in attempt for email: ${signInDto.email}`);
     const user = await this.authService.validateUser(
@@ -43,6 +48,8 @@ export class AuthController {
   }
 
   @Post('logout')
+  @ApiOperation({ summary: 'User logout' })
+  @ApiResponse({ status: 200, description: 'Logged out successfully' })
   async logout(@Res() res: Response) {
     this.logger.log('Logout attempt');
     // Clear the JWT cookie by setting it to an empty string and setting maxAge to 0

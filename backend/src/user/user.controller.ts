@@ -11,11 +11,18 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { AuthService } from '../auth/auth.service';
 import { SignUpDto } from './dto/signup.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   private readonly logger = new Logger(UserController.name);
@@ -26,6 +33,12 @@ export class UserController {
   ) {}
 
   @Post('signup')
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiResponse({
+    status: 200,
+    description: 'User registered and logged in successfully',
+  })
+  @ApiResponse({ status: 409, description: 'Email is already registered' })
   async signUp(@Body() signUpDto: SignUpDto, @Res() res: Response) {
     this.logger.log(`Sign up request received for email: ${signUpDto.email}`);
     try {
@@ -63,6 +76,9 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
+  @ApiOperation({ summary: 'Get user profile' })
+  @ApiResponse({ status: 200, description: 'Profile retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getProfile(@Req() req: Request, @Res() res: Response) {
     this.logger.log('Profile request received');
     const user = req.headers;
