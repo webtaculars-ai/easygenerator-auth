@@ -14,14 +14,18 @@ async function bootstrap() {
     origin: process.env.BASE_URL || 'http://localhost:3001',
     credentials: true,
   });
+  console.log('called', process.env.NODE_ENV);
 
-  const config = new DocumentBuilder()
-    .setTitle('User Authentication API')
-    .setDescription('API for user signup, login, and profile management')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('called', process.env.NODE_ENV);
+    const config = new DocumentBuilder()
+      .setTitle('Easy Generator Authentication API')
+      .setDescription('API for user signup, login, and profile management')
+      .setVersion('1.0')
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api-docs', app, document);
+  }
 
   await app.listen(3000);
 }
