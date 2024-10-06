@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import FormLayout from "../components/FormLayout";
 
-// Constant for password condition message
 const PASSWORD_CONDITION_MESSAGE =
   "Password must be at least 8 characters long, contain 1 letter, 1 number, 1 special character.";
 
@@ -17,6 +17,7 @@ const SignUpPage = () => {
   );
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
+  const [signUpError, setSignUpError] = useState("");
   const navigate = useNavigate();
 
   const validatePassword = (password: string) => {
@@ -38,13 +39,29 @@ const SignUpPage = () => {
     validatePassword(e.target.value);
   };
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validatePassword(password)) {
       return;
     }
-    // TODO: Send data to the backend
-    navigate("/application");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/user/signup",
+        {
+          email,
+          name,
+          password,
+        },
+        { withCredentials: true }
+      );
+      console.log(response.status);
+      if (response.status === 201) {
+        navigate("/application");
+      }
+    } catch (error) {
+      setSignUpError("Error during sign-up, please try again.");
+    }
   };
 
   return (
@@ -74,6 +91,8 @@ const SignUpPage = () => {
       >
         {passwordError}
       </p>
+
+      {signUpError && <p className="text-red-500">{signUpError}</p>}
 
       <Button text="Sign Up" disabled={!email || !name || !isPasswordValid} />
     </FormLayout>
