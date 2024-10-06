@@ -20,6 +20,9 @@ export class User extends Document {
   email: string;
 
   @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true })
   password: string;
 
   @Prop({ enum: UserRole, default: UserRole.USER })

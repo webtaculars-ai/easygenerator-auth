@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../utiils/axiosInstance";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import FormLayout from "../components/FormLayout";
@@ -46,21 +46,17 @@ const SignUpPage = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/user/signup",
-        {
-          email,
-          name,
-          password,
-        },
-        { withCredentials: true }
-      );
-      console.log(response.status);
+      const response = await axiosInstance.post("/user/signup", {
+        email,
+        name,
+        password,
+      });
+
       if (response.status === 201) {
         navigate("/application");
       }
-    } catch (error) {
-      setSignUpError("Error during sign-up, please try again.");
+    } catch (error: any) {
+      setSignUpError(error.response.data.message || "Something went wrong");
     }
   };
 
