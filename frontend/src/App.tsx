@@ -7,15 +7,19 @@ import {
 import SignUpPage from "./pages/SignUp";
 import SignInPage from "./pages/SignIn";
 import ApplicationPage from "./pages/Application";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/signup" />} />
+        <Route path="/" element={<Navigate to="/application" />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/signin" element={<SignInPage />} />
-        <Route path="/application" element={<ApplicationPage />} />
+        <Route
+          path="/application"
+          element={<ProtectedRoute element={<ApplicationPage />} />}
+        />
         <Route path="*" element={<Navigate to="/signup" />} />
       </Routes>
     </Router>

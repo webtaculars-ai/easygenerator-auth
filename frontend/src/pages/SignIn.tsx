@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../utiils/axiosInstance";
+import axiosInstance from "../utils/axiosInstance";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import FormLayout from "../components/FormLayout";

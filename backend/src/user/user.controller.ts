@@ -1,15 +1,19 @@
 import {
   Controller,
+  Get,
   Post,
   Body,
   Res,
+  Req,
   ConflictException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { UserService } from './user.service';
 import { AuthService } from '../auth/auth.service';
 import { SignUpDto } from './dto/signup.dto';
-import { Response } from 'express';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -46,5 +50,16 @@ export class UserController {
         message: 'Something went wrong, please try again',
       });
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@Req() req: Request, @Res() res: Response) {
+    const user = req.headers;
+    console.log(user);
+    if (!user) {
+      return res.status(401).json({ message: 'Unauthorized user' });
+    }
+    return res.status(200).json({ user });
   }
 }
