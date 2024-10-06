@@ -8,6 +8,7 @@ import {
   ConflictException,
   HttpStatus,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from './user.service';
@@ -17,6 +18,8 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
+  private readonly logger = new Logger(UserController.name);
+
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
@@ -24,11 +27,13 @@ export class UserController {
 
   @Post('signup')
   async signUp(@Body() signUpDto: SignUpDto, @Res() res: Response) {
+    this.logger.log(`Sign up request received for email: ${signUpDto.email}`);
     try {
       const { email, name, password } = signUpDto;
       const user = await this.userService.signUp(email, name, password);
 
       const jwt = await this.authService.login(user);
+      this.logger.log(`User signed up and logged in successfully: ${email}`);
 
       res.cookie('jwt', jwt.accessToken, {
         httpOnly: true,
@@ -41,6 +46,10 @@ export class UserController {
         message: 'User registered and logged in successfully',
       });
     } catch (error) {
+      this.logger.error(
+        `Error during sign up for email: ${signUpDto.email}`,
+        error.stack,
+      );
       if (error instanceof ConflictException) {
         return res.status(HttpStatus.CONFLICT).json({
           message: error.message,
@@ -55,11 +64,13 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Req() req: Request, @Res() res: Response) {
+    this.logger.log('Profile request received');
     const user = req.headers;
-    console.log(user);
     if (!user) {
+      this.logger.warn('Unauthorized profile access attempt');
       return res.status(401).json({ message: 'Unauthorized user' });
     }
+    this.logger.log('Profile successfully retrieved');
     return res.status(200).json({ user });
   }
 }
